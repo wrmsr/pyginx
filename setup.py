@@ -65,7 +65,6 @@ if __name__ == '__main__':
         classifiers=[
             "Intended Audience :: Developers",
             "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: " + '.'.join(map(str, sys.version_info[:2])),
             "Programming Language :: Python :: Implementation :: CPython",
             "Programming Language :: Python",
         ],
