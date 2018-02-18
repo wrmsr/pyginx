@@ -16,11 +16,14 @@ clean:
 	-rm -rf build
 	-rm -rf dist
 	-rm -rf pyginx.egg-info
+
 	find pyginx \
 		-name '*.pyc' -delete -or \
 		-name '*.pyo' -delete -or \
 		-name '__pycache__' -delete -or \
 		-name '*.exe' -delete
+
+	(cd nginx && make clean)
 
 .PHONY: brew
 brew:

@@ -64,7 +64,7 @@ build:
 		done ; \
 		\
 		export LUAJIT_LIB="$$LUAJIT/lib" ; \
-		export LUAJIT_INC="$$LUAJIT/include" ; \
+		export LUAJIT_INC="$$LUAJIT/include/luajit-2.1" ; \
 		\
 		./configure \
 			--with-cc-opt="-g -O2 -fstack-protector $$BREW_CFLAGS" \
@@ -98,5 +98,3 @@ install: build
 		cp build/nginx-$(NGINX_VERSION)/objs/nginx "$$DST" ; \
 		chmod a+x "$$DST" \
 	)
-
-	rm -rf build
