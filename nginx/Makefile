@@ -22,8 +22,12 @@ build:
 	( \
 		set -e ; \
 		\
+		if [ ! -z "$$MANYLINUX" ] ; then \
+			CFLAGS="$$CFLAGS -std=gnu99" ; \
+		fi ; \
+		\
 		tar xvzf LuaJIT-$(LUAJIT_VERSION).tar.gz -C build/ ; \
-		(cd build/LuaJIT-$(LUAJIT_VERSION) && make -j 2) ; \
+		(cd build/LuaJIT-$(LUAJIT_VERSION) && CFLAGS="$$CFLAGS" make -j 2) ; \
 	)
 
 	tar xvzf nginx-$(NGINX_VERSION).tar.gz -C build/
@@ -64,7 +68,6 @@ build:
 			--with-http_ssl_module \
 			--with-http_stub_status_module \
 			--with-http_v2_module \
-			\
 			\
 			$$CONFIGURE_FLAGS \
 			\
