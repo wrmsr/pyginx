@@ -1,5 +1,7 @@
 NGINX_VERSION:=1.13.7
-NGINX_VTS_VERSION:=0.1.15
+NGINX_MODULES:= \
+	ngx_devel_kit-0.3.0 \
+	nginx-module-vts-0.1.15 \
 
 .PHONY: all
 all:
@@ -20,12 +22,16 @@ install-nginx:
 	if [ -d build/nginx-$(NGINX_VERSION) ] ; then \
 		rm -rf build/nginx-$(NGINX_VERSION) ; \
 	fi
-	if [ -d build/nginx-module-vts-$(NGINX_VTS_VERSION) ] ; then \
-		rm -rf build/nginx-module-vts-$(NGINX_VTS_VERSION) ; \
-	fi
+	for MOD in $(NGINX_MODULES); do \
+		if [ -d "build/$$MOD" ] ; then \
+			rm -rf "build/$$MOD" ; \
+		fi ; \
+	done
 
 	tar xvzf nginx-$(NGINX_VERSION).tar.gz -C build/
-	tar xvzf nginx-module-vts-$(NGINX_VTS_VERSION).tar.gz -C build/
+	for MOD in $(NGINX_MODULES) ; do \
+		tar xvzf "$$MOD.tar.gz" -C build/ ; \
+	done
 
 	( \
 		set -e ; \
@@ -38,6 +44,11 @@ install-nginx:
 			BREW_CFLAGS="-I$$(brew --prefix openssl)/include -I$$(brew --prefix pcre)/include" ; \
 			BREW_LDFLAGS="-L$$(brew --prefix openssl)/lib -L$$(brew --prefix pcre)/lib" ; \
 		fi ; \
+		\
+		CONFIGURE_FLAGS='' ; \
+		for MOD in $(NGINX_MODULES) ; do \
+			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --add-module=$$(pwd)/../$$MOD" ; \
+		done ; \
 		\
 		./configure \
 			--with-cc-opt="-g -O2 -fstack-protector $$BREW_CFLAGS" \
@@ -52,11 +63,11 @@ install-nginx:
 			--with-http_stub_status_module \
 			--with-http_v2_module \
 			\
-			--add-module="$$(pwd)/../nginx-module-vts-$(NGINX_VTS_VERSION)" \
+			$$CONFIGURE_FLAGS \
 			\
 			; \
 		\
-		make \
+		make -j2 \
 	)
 
 	( \

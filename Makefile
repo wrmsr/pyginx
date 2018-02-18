@@ -59,6 +59,7 @@ venv:
 
 .PHONY: build
 build: venv
+	.venv/bin/python setup.py build
 
 .PHONY: test
 test: build

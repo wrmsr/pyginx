@@ -1,5 +1,7 @@
 FROM quay.io/pypa/manylinux1_x86_64
 
+RUN uname -a
+
 RUN ( \
     yum -y update && \
     yum install -y zlib-devel openssl-devel sqlite-devel bzip2-devel readline-devel xz-devel \
@@ -10,6 +12,6 @@ RUN ( \
     echo 'export PATH="/root/.pyenv/bin:$PATH" && eval "$(pyenv init -)" && eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc \
 )
 
-RUN "/root/.pyenv/bin/pyenv" install -s -v 3.6.3
+#RUN "/root/.pyenv/bin/pyenv" install -s -v 3.6.3
 
 WORKDIR /pyginx
