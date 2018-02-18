@@ -57,6 +57,7 @@ if __name__ == '__main__':
         version=ABOUT['__version__'],
         description=ABOUT['__description__'],
         author=ABOUT['__author__'],
+        author_email=ABOUT['__author_email__'],
         url=ABOUT['__url__'],
 
         classifiers=[
