@@ -2,7 +2,7 @@ FROM quay.io/pypa/manylinux1_x86_64
 
 RUN ( \
     yum -y update && \
-    yum install -y zlib-devel openssl-devel sqlite-devel bzip2-devel readline-devel \
+    yum install -y zlib-devel openssl-devel sqlite-devel bzip2-devel readline-devel xz-devel \
 )
 
 RUN ( \
