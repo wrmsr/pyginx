@@ -81,5 +81,4 @@ install: build
 		chmod a+x "$$DST" \
 	)
 
-	rm -rf build/nginx-$(NGINX_VERSION)
-	rm -rf build/nginx-module-vts-$(NGINX_VTS_VERSION)
+	rm -rf build
