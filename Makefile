@@ -71,6 +71,22 @@ dist: build
 
 	"$(DIST_BUILD_PYTHON)" setup.py bdist_wheel
 
+.PHONY: test_install
+test_install: dist
+	rm -rf .venv-install
+
+	if [ "$$(python --version)" == "Python $(PYTHON_VERSION)" ] ; then \
+		virtualenv .venv-install ; \
+	else \
+		virtualenv -p $(PYENV_ROOT)/versions/$(PYTHON_VERSION)/bin/python .venv-install ; \
+	fi ; \
+
+	.venv-install/bin/pip install $(PIP_ARGS) -r requirements.txt ; \
+
+	.venv-install/bin/python -m wheel install $(PIP_ARGS) $$(find dist/*.whl)
+
+	cd .venv-install && bin/python -c 'import os, pkg_resources; exit(0 if os.path.exists(pkg_resources.resource_filename("pyginx", "nginx.exe")) else 1)'
+
 .PHONY: upload
 upload: build
 	.venv/bin/python setup.py bdist_wheel upload

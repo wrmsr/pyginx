@@ -58,6 +58,7 @@ build:
 			--with-debug \
 			--with-ipv6 \
 			--with-pcre \
+			--with-stream \
 			\
 			--with-http_gzip_static_module \
 			--with-http_ssl_module \
