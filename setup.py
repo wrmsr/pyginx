@@ -26,19 +26,9 @@ def _read_about():
 _read_about()
 
 
-PACKAGE_DATA = [
-]
-
 LICENSE_FILES = [
     'LICENSE',
 ] + glob.glob('LICENSE-*')
-
-
-INSTALL_REQUIRES = [
-]
-
-EXTRAS_REQUIRE = {
-}
 
 
 class BinaryDistribution(setuptools.dist.Distribution):
@@ -126,19 +116,12 @@ if __name__ == '__main__':
             include=['pyginx', 'pyginx.*'],
             exclude=['tests', '*.tests', '*.tests.*'],
         ),
-        py_modules=['pyginx'],
 
-        package_data={'pyginx': PACKAGE_DATA},
-        include_package_data=True,
+        py_modules=['pyginx'],
 
         cmdclass={
             'build_py': build_py,
             'build_clib': build_clib,
             'install': install,
         },
-
-        entry_points={},
-
-        install_requires=INSTALL_REQUIRES,
-        extras_require=EXTRAS_REQUIRE,
     )
