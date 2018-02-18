@@ -81,13 +81,13 @@ test_install: dist
 
 	if [ ! -z "$$MANYLINUX" ] ; then \
 		/opt/python/cp36-cp36m/bin/python -m virtualenv .venv-install ; \
-	else if [ "$$(python --version)" == "Python $(PYTHON_VERSION)" ] ; then \
+	elif [ "$$(python --version)" == "Python $(PYTHON_VERSION)" ] ; then \
 		virtualenv .venv-install ; \
 	else \
 		virtualenv -p $(PYENV_ROOT)/versions/$(PYTHON_VERSION)/bin/python .venv-install ; \
-	fi ; \
+	fi
 
-	.venv-install/bin/pip install $(PIP_ARGS) -r requirements.txt ; \
+	.venv-install/bin/pip install $(PIP_ARGS) -r requirements.txt
 
 	.venv-install/bin/python -m wheel install $(PIP_ARGS) $$(find dist/*.whl)
 
