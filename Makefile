@@ -75,3 +75,7 @@ dist: build
 	$(eval DIST_BUILD_PYTHON:=$(realpath .venv/bin/python))
 
 	"$(DIST_BUILD_PYTHON)" setup.py bdist_wheel
+
+.PHONY: upload
+upload: build
+	.venv/bin/python setup.py bdist_wheel upload

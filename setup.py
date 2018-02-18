@@ -3,6 +3,7 @@ import subprocess
 import sys
 
 import setuptools.command.build_ext
+import setuptools.dist
 
 
 BASE_DIR = os.path.dirname(__file__)
@@ -36,6 +37,12 @@ EXT_MODULES = [
 ]
 
 
+class BinaryDistribution(setuptools.dist.Distribution):
+
+    def is_pure(self):
+        return False
+
+
 class build_ext(setuptools.command.build_ext.build_ext):
 
     user_options = setuptools.command.build_ext.build_ext.user_options + [
@@ -66,6 +73,8 @@ if __name__ == '__main__':
             "Programming Language :: Python :: Implementation :: CPython",
             "Programming Language :: Python",
         ],
+
+        distclass=setuptools.dist,
 
         zip_safe=True,
 
