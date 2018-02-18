@@ -63,7 +63,7 @@ build:
 			\
 			--with-debug \
 			--with-ipv6 \
-			--with-pcre \
+			--with-pcre-jit \
 			--with-stream \
 			--with-threads \
 			\
