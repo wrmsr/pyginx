@@ -92,7 +92,7 @@ test_install: dist
 	cd .venv-install && bin/python -c 'import os, pkg_resources; exit(0 if os.path.exists(pkg_resources.resource_filename("pyginx", "nginx.exe")) else 1)'
 
 .PHONY: upload
-upload: build
+upload: test_install
 	.venv/bin/python setup.py bdist_wheel upload
 
 .PHONY: docker
