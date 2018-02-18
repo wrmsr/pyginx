@@ -1,7 +1,11 @@
 NGINX_VERSION:=1.13.7
 NGINX_MODULES:= \
-	ngx_devel_kit-0.3.0 \
+	lua-nginx-module-0.10.11 \
 	nginx-module-vts-0.1.15 \
+	ngx_devel_kit-0.3.0 \
+	stream-lua-nginx-module-0.0.3 \
+
+LUAJIT_VERSION:=2.1.0-beta3
 
 .PHONY: all
 all:
@@ -10,23 +14,17 @@ all:
 clean:
 	rm -rf build
 
-.PHONY: install
-install: install-nginx
+.PHONY: build
+build:
+	-rm -rf build
+	mkdir build ; \
 
-.PHONY: install-nginx
-install-nginx:
-	if [ ! -d build ] ; then \
-		mkdir build ; \
-	fi
-
-	if [ -d build/nginx-$(NGINX_VERSION) ] ; then \
-		rm -rf build/nginx-$(NGINX_VERSION) ; \
-	fi
-	for MOD in $(NGINX_MODULES); do \
-		if [ -d "build/$$MOD" ] ; then \
-			rm -rf "build/$$MOD" ; \
-		fi ; \
-	done
+	( \
+		set -e ; \
+		\
+		tar xvzf LuaJIT-$(LUAJIT_VERSION).tar.gz -C build/ ; \
+		(cd build/LuaJIT-$(LUAJIT_VERSION) && make -j 2) ; \
+	)
 
 	tar xvzf nginx-$(NGINX_VERSION).tar.gz -C build/
 	for MOD in $(NGINX_MODULES) ; do \
@@ -50,9 +48,12 @@ install-nginx:
 			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --add-module=$$(pwd)/../$$MOD" ; \
 		done ; \
 		\
+		export LUAJIT_LIB='../LuaJIT-$(LUAJIT_VERSION)/src' ; \
+		export LUAJIT_INC='../LuaJIT-$(LUAJIT_VERSION)/src' ; \
+		\
 		./configure \
 			--with-cc-opt="-g -O2 -fstack-protector $$BREW_CFLAGS" \
-			--with-ld-opt="$$BREW_LDFLAGS" \
+			--with-ld-opt="$$BREW_LDFLAGS -Wl,-rpath,$$LUAJIT_LIB" \
 			\
 			--with-debug \
 			--with-ipv6 \
@@ -63,6 +64,7 @@ install-nginx:
 			--with-http_stub_status_module \
 			--with-http_v2_module \
 			\
+			\
 			$$CONFIGURE_FLAGS \
 			\
 			; \
@@ -70,6 +72,8 @@ install-nginx:
 		make -j2 \
 	)
 
+.PHONY: install
+install: build
 	( \
 		DST='../pyginx/nginx.exe' ; \
 		cp build/nginx-$(NGINX_VERSION)/objs/nginx "$$DST" ; \
