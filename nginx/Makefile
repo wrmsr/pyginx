@@ -18,9 +18,9 @@ clean:
 
 .PHONY: build
 build:
-	-mkdir build ; \
-	-rm build/nginx.exe ; \
-	\
+	-mkdir build
+	-rm build/nginx.exe
+
 	( \
 		set -e ; \
 		\
@@ -69,30 +69,32 @@ build:
 		export LUAJIT_INC="$$LUAJIT/include/luajit-2.1" ; \
 		LDFLAGS="$$LDFLAGS -Wl,-rpath,$$LUAJIT_LIB" ; \
 		\
-		./configure \
-			--with-cc-opt="$$CFLAGS" \
-			--with-ld-opt="$$LDFLAGS " \
+		if ! [ -f "build/nginx-$(NGINX_VERSION)/objs/nginx" ] ; then \
+			./configure \
+				--with-cc-opt="$$CFLAGS" \
+				--with-ld-opt="$$LDFLAGS " \
+				\
+				--with-debug \
+				--with-ipv6 \
+				--with-pcre-jit \
+				--with-stream \
+				--with-threads \
+				\
+				--with-http_addition_module \
+				--with-http_gzip_static_module \
+				--with-http_slice_module \
+				--with-http_ssl_module \
+				--with-http_stub_status_module \
+				--with-http_sub_module \
+				--with-http_v2_module \
+				\
+				$$CONFIGURE_FLAGS \
+				\
+				; \
 			\
-			--with-debug \
-			--with-ipv6 \
-			--with-pcre-jit \
-			--with-stream \
-			--with-threads \
-			\
-			--with-http_addition_module \
-			--with-http_gzip_static_module \
-			--with-http_slice_module \
-			--with-http_ssl_module \
-			--with-http_stub_status_module \
-			--with-http_sub_module \
-			--with-http_v2_module \
-			\
-			$$CONFIGURE_FLAGS \
-			\
-			; \
-		\
-		make -j2 \
-		\
-		cp build/nginx-$(NGINX_VERSION)/objs/nginx build/nginx.exe ; \
-		chmod a+x build/nginx.exe \
+			make -j2 ; \
+		fi ; \
 	)
+
+	cp build/nginx-$(NGINX_VERSION)/objs/nginx build/nginx.exe
+	chmod a+x build/nginx.exe

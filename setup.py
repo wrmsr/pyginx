@@ -1,6 +1,7 @@
 import glob
 import os
 import shutil
+import stat
 import subprocess
 import sys
 
@@ -73,7 +74,11 @@ class build_clib(setuptools.command.build_clib.build_clib):
 
     def run(self):
         if not os.path.isfile('nginx/build/nginx.exe'):
-            subprocess.run(['make', 'clean',  'install'], cwd='nginx', timeout=5*60, check=True)
+            subprocess.run(['make', 'build'], cwd='nginx', timeout=5*60, check=True)
+
+        nginx = 'pyginx/nginx.exe'
+        shutil.copyfile('nginx/build/nginx.exe', nginx)
+        os.chmod(nginx, os.stat(nginx).st_mode | stat.S_IXUSR | stat.S_IXGRP)
 
         super().run()
 
@@ -87,7 +92,9 @@ class install(setuptools.command.install.install):
     def run(self):
         super().run()
 
-        shutil.copyfile('nginx/build/nginx.exe', os.path.join(self.install_lib, 'pyginx', 'nginx.exe'))
+        nginx = os.path.join(self.install_lib, 'pyginx', 'nginx.exe')
+        shutil.copyfile('nginx/build/nginx.exe', nginx)
+        os.chmod(nginx, os.stat(nginx).st_mode | stat.S_IXUSR | stat.S_IXGRP)
 
 
 if __name__ == '__main__':

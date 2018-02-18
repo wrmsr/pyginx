@@ -13,6 +13,7 @@ all: clean build test test_install
 clean:
 	-rm -rf .cache
 	-rm -rf .venv
+	-rm -rf .venv-install
 	-rm -rf build
 	-rm -rf dist
 	-rm -rf pyginx.egg-info
