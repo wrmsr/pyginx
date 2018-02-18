@@ -4,6 +4,7 @@ import subprocess
 import sys
 
 import setuptools.command.build_py
+import setuptools.command.install
 import setuptools.dist
 
 
@@ -74,6 +75,14 @@ class build_py(setuptools.command.build_py.build_py):
             self.copy_file(fname, outfile, preserve_mode=0)
 
 
+class install(setuptools.command.install.install):
+
+    def finalize_options(self):
+        super().finalize_options()
+        if self.distribution.has_ext_modules():
+            self.install_lib = self.install_platlib
+
+
 if __name__ == '__main__':
     setuptools.setup(
         name=ABOUT['__title__'],
@@ -110,6 +119,7 @@ if __name__ == '__main__':
 
         cmdclass={
             'build_py': build_py,
+            'install': install,
         },
 
         entry_points={},

@@ -51,11 +51,12 @@ build:
 		\
 		cd build/nginx-$(NGINX_VERSION) ; \
 		\
-		BREW_CFLAGS='' ; \
-		BREW_LDFLAGS='' ; \
+		CFLAGS="$$CFLAGS -g -O2 -fstack-protector" ; \
+		LDFLAGS="$$LDFLAGS" ; \
+		\
 		if [ "$$(uname)" = "Darwin" ] && command -v brew ; then \
-			BREW_CFLAGS="-I$$(brew --prefix openssl)/include -I$$(brew --prefix pcre)/include" ; \
-			BREW_LDFLAGS="-L$$(brew --prefix openssl)/lib -L$$(brew --prefix pcre)/lib" ; \
+			CFLAGS="$$CFLAGS -I$$(brew --prefix openssl)/include -I$$(brew --prefix pcre)/include" ; \
+			LDFLAGS="$$LDFLAGS -L$$(brew --prefix openssl)/lib -L$$(brew --prefix pcre)/lib" ; \
 		fi ; \
 		\
 		CONFIGURE_FLAGS='' ; \
@@ -65,10 +66,11 @@ build:
 		\
 		export LUAJIT_LIB="$$LUAJIT/lib" ; \
 		export LUAJIT_INC="$$LUAJIT/include/luajit-2.1" ; \
+		LDFLAGS="$$LDFLAGS -Wl,-rpath,$$LUAJIT_LIB" ; \
 		\
 		./configure \
-			--with-cc-opt="-g -O2 -fstack-protector $$BREW_CFLAGS" \
-			--with-ld-opt="$$BREW_LDFLAGS -Wl,-rpath,$$LUAJIT_LIB" \
+			--with-cc-opt="$$CFLAGS" \
+			--with-ld-opt="$$LDFLAGS " \
 			\
 			--with-debug \
 			--with-ipv6 \
