@@ -57,14 +57,8 @@ venv:
 		.venv/bin/pip install $(PIP_ARGS) -r requirements.txt ; \
 	fi
 
-.PHONY: bundled
-bundled: venv
-	if [ ! -f pyginx/nginx.exe ] ; then \
-		(set -e && source .venv/bin/activate && cd nginx && make clean install) ; \
-	fi
-
 .PHONY: build
-build: bundled
+build: venv
 
 .PHONY: test
 test: build
@@ -79,3 +73,15 @@ dist: build
 .PHONY: upload
 upload: build
 	.venv/bin/python setup.py bdist_wheel upload
+
+.PHONY: docker
+docker:
+	docker build -t wrmsr/pyginx .
+
+.PHONY: docker_build
+docker_build:
+	docker run -v "$(pwd):/pyginx" -it wrmsr/pyginx make
+
+.PHONY: docker_test
+docker_test: docker_build
+	docker run -v "$(pwd):/pyginx" -it wrmsr/pyginx .venv/bin/python -m unittest discover pyginx '*_test.py'

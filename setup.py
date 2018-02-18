@@ -1,8 +1,9 @@
+import glob
 import os
 import subprocess
 import sys
 
-import setuptools.command.build_ext
+import setuptools.command.build_py
 import setuptools.dist
 
 
@@ -25,16 +26,16 @@ PACKAGE_DATA = [
     'pyginx/nginx.exe',
 ]
 
+LICENSE_FILES = [
+    'LICENSE',
+] + glob.glob('LICENSE-*')
+
 
 INSTALL_REQUIRES = [
 ]
 
 EXTRAS_REQUIRE = {
 }
-
-
-EXT_MODULES = [
-]
 
 
 class BinaryDistribution(setuptools.dist.Distribution):
@@ -51,9 +52,9 @@ class BinaryDistribution(setuptools.dist.Distribution):
         return True
 
 
-class build_ext(setuptools.command.build_ext.build_ext):
+class build_py(setuptools.command.build_py.build_py):
 
-    user_options = setuptools.command.build_ext.build_ext.user_options + [
+    user_options = setuptools.command.build_py.build_py.user_options + [
         ('nobundled', None, 'do not build bundled assets'),
     ]
 
@@ -63,7 +64,14 @@ class build_ext(setuptools.command.build_ext.build_ext):
         if not self.nobundled:
             if not os.path.exists('pyginx/nginx.exe'):
                 subprocess.run(['make', 'clean',  'install'], cwd='nginx', timeout=5*60, check=True)
-        return super().run()
+
+        super().run()
+
+        for fname in LICENSE_FILES:
+            outfile = os.path.join(self.build_lib, 'pyginx', fname)
+            dir = os.path.dirname(outfile)
+            self.mkpath(dir)
+            self.copy_file(fname, outfile, preserve_mode=0)
 
 
 if __name__ == '__main__':
@@ -75,11 +83,14 @@ if __name__ == '__main__':
         author_email=ABOUT['__author_email__'],
         url=ABOUT['__url__'],
 
+        license='BSD',
+
         classifiers=[
-            "Intended Audience :: Developers",
-            "Programming Language :: Python :: 3",
-            "Programming Language :: Python :: Implementation :: CPython",
-            "Programming Language :: Python",
+            'Intended Audience :: Developers',
+            'License :: OSI Approved :: BSD License',
+            'Programming Language :: Python :: 3',
+            'Programming Language :: Python :: Implementation :: CPython',
+            'Programming Language :: Python',
         ],
 
         distclass=BinaryDistribution,
@@ -98,13 +109,11 @@ if __name__ == '__main__':
         include_package_data=True,
 
         cmdclass={
-            'build_ext': build_ext,
+            'build_py': build_py,
         },
 
         entry_points={},
 
         install_requires=INSTALL_REQUIRES,
         extras_require=EXTRAS_REQUIRE,
-
-        ext_modules=EXT_MODULES,
     )
