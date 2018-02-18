@@ -74,7 +74,7 @@ if __name__ == '__main__':
             "Programming Language :: Python",
         ],
 
-        distclass=setuptools.dist,
+        distclass=BinaryDistribution,
 
         zip_safe=True,
 
