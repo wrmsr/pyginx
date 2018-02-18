@@ -12,6 +12,6 @@ RUN ( \
     echo 'export PATH="/root/.pyenv/bin:$PATH" && eval "$(pyenv init -)" && eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc \
 )
 
-#RUN "/root/.pyenv/bin/pyenv" install -s -v 3.6.3
+RUN /opt/python/cp36-cp36m/bin/pip install virtualenv
 
-WORKDIR /pyginx
+ENV MANYLINUX=1

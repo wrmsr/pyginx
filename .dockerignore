@@ -1,0 +1,15 @@
+**__pycache__**
+.cache
+.env
+.git
+.idea
+.tox
+.venv
+.venv-install
+attic
+build
+dist
+nginx/build
+
+!.git/HEAD
+!.git/refs
