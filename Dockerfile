@@ -4,7 +4,14 @@ RUN uname -a
 
 RUN ( \
     yum -y update && \
-    yum install -y zlib-devel openssl-devel sqlite-devel bzip2-devel readline-devel xz-devel \
+    yum install -y \
+        bzip2-devel \
+        openssl-devel \
+        pcre-devel \
+        readline-devel \
+        sqlite-devel \
+        xz-devel \
+        zlib-devel \
 )
 
 RUN ( \

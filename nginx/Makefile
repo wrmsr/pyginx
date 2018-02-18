@@ -1,4 +1,5 @@
 NGINX_VERSION:=1.13.7
+LUAJIT_VERSION:=2.1-20171103
 NGINX_MODULES:= \
 	ngx_devel_kit-0.3.0 \
 	form-input-nginx-module-0.12 \
@@ -7,7 +8,6 @@ NGINX_MODULES:= \
 	set-misc-nginx-module-0.31 \
 	stream-lua-nginx-module-0.0.3 \
 
-LUAJIT_VERSION:=2.1.0-beta3
 
 .PHONY: all
 all:
@@ -28,9 +28,9 @@ build:
 		fi ; \
 		\
 		if [ ! -d "build/luajit" ] ; then \
-			tar xvzf LuaJIT-$(LUAJIT_VERSION).tar.gz -C build/ ; \
+			tar xvzf luajit2-$(LUAJIT_VERSION).tar.gz -C build/ ; \
 			DST="$$(pwd)/build/luajit" ; \
-			(cd build/LuaJIT-$(LUAJIT_VERSION) && CFLAGS="$$CFLAGS" make PREFIX="$$DST" -j 2 install) ; \
+			(cd build/luajit2-$(LUAJIT_VERSION) && CFLAGS="$$CFLAGS" make PREFIX="$$DST" -j2 install) ; \
 		fi \
 	)
 
