@@ -79,7 +79,9 @@ dist: build
 test_install: dist
 	rm -rf .venv-install
 
-	if [ "$$(python --version)" == "Python $(PYTHON_VERSION)" ] ; then \
+	if [ ! -z "$$MANYLINUX" ] ; then \
+		/opt/python/cp36-cp36m/bin/python -m virtualenv .venv-install ; \
+	else if [ "$$(python --version)" == "Python $(PYTHON_VERSION)" ] ; then \
 		virtualenv .venv-install ; \
 	else \
 		virtualenv -p $(PYENV_ROOT)/versions/$(PYTHON_VERSION)/bin/python .venv-install ; \

@@ -1,8 +1,10 @@
 NGINX_VERSION:=1.13.7
 NGINX_MODULES:= \
+	ngx_devel_kit-0.3.0 \
+	form-input-nginx-module-0.12 \
 	lua-nginx-module-0.10.11 \
 	nginx-module-vts-0.1.15 \
-	ngx_devel_kit-0.3.0 \
+	set-misc-nginx-module-0.31 \
 	stream-lua-nginx-module-0.0.3 \
 
 LUAJIT_VERSION:=2.1.0-beta3
@@ -63,10 +65,14 @@ build:
 			--with-ipv6 \
 			--with-pcre \
 			--with-stream \
+			--with-threads \
 			\
+			--with-http_addition_module \
 			--with-http_gzip_static_module \
+			--with-http_slice_module \
 			--with-http_ssl_module \
 			--with-http_stub_status_module \
+			--with-http_sub_module \
 			--with-http_v2_module \
 			\
 			$$CONFIGURE_FLAGS \
