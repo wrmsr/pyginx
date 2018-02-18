@@ -17,6 +17,7 @@ clean:
 	-rm -rf build
 	-rm -rf dist
 	-rm -rf pyginx.egg-info
+	-rm -rf wheelhouse
 
 	find pyginx \
 		-name '*.pyc' -delete -or \
