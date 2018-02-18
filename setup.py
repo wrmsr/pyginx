@@ -1,8 +1,10 @@
 import glob
 import os
+import shutil
 import subprocess
 import sys
 
+import setuptools.command.build_clib
 import setuptools.command.build_py
 import setuptools.command.install
 import setuptools.dist
@@ -24,7 +26,6 @@ _read_about()
 
 
 PACKAGE_DATA = [
-    'pyginx/nginx.exe',
 ]
 
 LICENSE_FILES = [
@@ -49,23 +50,16 @@ class BinaryDistribution(setuptools.dist.Distribution):
     def is_pure(self):
         return False
 
+    def has_ext_modules(self):
+        return True
+
     def has_c_libraries(self):
         return True
 
 
 class build_py(setuptools.command.build_py.build_py):
 
-    user_options = setuptools.command.build_py.build_py.user_options + [
-        ('nobundled', None, 'do not build bundled assets'),
-    ]
-
-    nobundled = False
-
     def run(self):
-        if not self.nobundled:
-            if not os.path.exists('pyginx/nginx.exe'):
-                subprocess.run(['make', 'clean',  'install'], cwd='nginx', timeout=5*60, check=True)
-
         super().run()
 
         for fname in LICENSE_FILES:
@@ -75,12 +69,25 @@ class build_py(setuptools.command.build_py.build_py):
             self.copy_file(fname, outfile, preserve_mode=0)
 
 
+class build_clib(setuptools.command.build_clib.build_clib):
+
+    def run(self):
+        if not os.path.isfile('nginx/build/nginx.exe'):
+            subprocess.run(['make', 'clean',  'install'], cwd='nginx', timeout=5*60, check=True)
+
+        super().run()
+
+
 class install(setuptools.command.install.install):
 
     def finalize_options(self):
+        self.install_lib = self.install_platlib
         super().finalize_options()
-        if self.distribution.has_ext_modules():
-            self.install_lib = self.install_platlib
+
+    def run(self):
+        super().run()
+
+        shutil.copyfile('nginx/build/nginx.exe', os.path.join(self.install_lib, 'pyginx', 'nginx.exe'))
 
 
 if __name__ == '__main__':
@@ -119,6 +126,7 @@ if __name__ == '__main__':
 
         cmdclass={
             'build_py': build_py,
+            'build_clib': build_clib,
             'install': install,
         },
 

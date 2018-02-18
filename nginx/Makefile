@@ -19,7 +19,8 @@ clean:
 .PHONY: build
 build:
 	-mkdir build ; \
-
+	-rm build/nginx.exe ; \
+	\
 	( \
 		set -e ; \
 		\
@@ -91,12 +92,7 @@ build:
 			; \
 		\
 		make -j2 \
-	)
-
-.PHONY: install
-install: build
-	( \
-		DST='../pyginx/nginx.exe' ; \
-		cp build/nginx-$(NGINX_VERSION)/objs/nginx "$$DST" ; \
-		chmod a+x "$$DST" \
+		\
+		cp build/nginx-$(NGINX_VERSION)/objs/nginx build/nginx.exe ; \
+		chmod a+x build/nginx.exe \
 	)
