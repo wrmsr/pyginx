@@ -1,5 +1,3 @@
-import fnmatch
-import glob
 import os
 import subprocess
 import sys
@@ -12,7 +10,7 @@ ABOUT = {}
 
 
 def _read_about():
-    with open(os.path.join(BASE_DIR, 'baseband', '__about__.py'), 'rb') as f:
+    with open(os.path.join(BASE_DIR, 'pyginx', '__about__.py'), 'rb') as f:
         src = f.read()
         if sys.version_info[0] > 2:
             src = src.decode('UTF-8')
@@ -74,12 +72,12 @@ if __name__ == '__main__':
         setup_requires=['setuptools'],
 
         packages=setuptools.find_packages(
-            include=['baseband', 'baseband.*'],
+            include=['pyginx', 'pyginx.*'],
             exclude=['tests', '*.tests', '*.tests.*'],
         ),
-        py_modules=['baseband'],
+        py_modules=['pyginx'],
 
-        package_data={'baseband': PACKAGE_DATA},
+        package_data={'pyginx': PACKAGE_DATA},
         include_package_data=True,
 
         cmdclass={

@@ -13,7 +13,6 @@ install: install-nginx
 
 .PHONY: install-nginx
 install-nginx:
-	python -c 'import sys; sys.exit(0 if sys.version_info[0] > 2 else 1)'
 	if [ ! -d build ] ; then \
 		mkdir build ; \
 	fi
