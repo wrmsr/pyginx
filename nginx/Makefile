@@ -18,8 +18,7 @@ clean:
 
 .PHONY: build
 build:
-	-rm -rf build
-	mkdir build ; \
+	-mkdir build ; \
 
 	( \
 		set -e ; \
@@ -28,17 +27,27 @@ build:
 			CFLAGS="$$CFLAGS -std=gnu99" ; \
 		fi ; \
 		\
-		tar xvzf LuaJIT-$(LUAJIT_VERSION).tar.gz -C build/ ; \
-		(cd build/LuaJIT-$(LUAJIT_VERSION) && CFLAGS="$$CFLAGS" make -j 2) ; \
+		if [ ! -d "build/luajit" ] ; then \
+			tar xvzf LuaJIT-$(LUAJIT_VERSION).tar.gz -C build/ ; \
+			DST="$$(pwd)/build/luajit" ; \
+			(cd build/LuaJIT-$(LUAJIT_VERSION) && CFLAGS="$$CFLAGS" make PREFIX="$$DST" -j 2 install) ; \
+		fi \
 	)
 
-	tar xvzf nginx-$(NGINX_VERSION).tar.gz -C build/
+	if ! [ -d "build/nginx-$(NGINX_VERSION)" ] ; then \
+		tar xvzf nginx-$(NGINX_VERSION).tar.gz -C build/ ; \
+	fi
+
 	for MOD in $(NGINX_MODULES) ; do \
-		tar xvzf "$$MOD.tar.gz" -C build/ ; \
+		if ! [ -d "build/$$MOD" ] ; then \
+			tar xvzf "$$MOD.tar.gz" -C build/ ; \
+		fi ; \
 	done
 
 	( \
 		set -e ; \
+		\
+		export LUAJIT="$$(pwd)/build/luajit" ; \
 		\
 		cd build/nginx-$(NGINX_VERSION) ; \
 		\
@@ -54,8 +63,8 @@ build:
 			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --add-module=$$(pwd)/../$$MOD" ; \
 		done ; \
 		\
-		export LUAJIT_LIB='../LuaJIT-$(LUAJIT_VERSION)/src' ; \
-		export LUAJIT_INC='../LuaJIT-$(LUAJIT_VERSION)/src' ; \
+		export LUAJIT_LIB="$$LUAJIT/lib" ; \
+		export LUAJIT_INC="$$LUAJIT/include" ; \
 		\
 		./configure \
 			--with-cc-opt="-g -O2 -fstack-protector $$BREW_CFLAGS" \
