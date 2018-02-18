@@ -39,8 +39,16 @@ EXT_MODULES = [
 
 class BinaryDistribution(setuptools.dist.Distribution):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.libraries = []
+
     def is_pure(self):
         return False
+
+    def has_c_libraries(self):
+        return True
 
 
 class build_ext(setuptools.command.build_ext.build_ext):
