@@ -49,6 +49,4 @@ test: build
 dist: build
 	$(eval DIST_BUILD_PYTHON:=$(realpath .venv/bin/python))
 
-	git describe --match=NeVeRmAtCh --always --abbrev=40 --dirty > "$(DIST_BUILD_DIR)/pyginx/.revision"
-
 	"$(DIST_BUILD_PYTHON)" setup.py bdist_wheel
