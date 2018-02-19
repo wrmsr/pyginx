@@ -76,9 +76,7 @@ test: build
 
 .PHONY: dist
 dist: build
-	$(eval DIST_BUILD_PYTHON:=$(realpath .venv/bin/python))
-
-	"$(DIST_BUILD_PYTHON)" setup.py bdist_wheel
+	.venv/bin/python setup.py bdist_wheel
 
 .PHONY: test_install
 test_install: dist
