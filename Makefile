@@ -115,3 +115,7 @@ docker_build:
 .PHONY: docker_test
 docker_test: docker_build
 	docker run -v "$$(pwd):/pyginx" -it wrmsr/pyginx .venv/bin/python -m unittest discover pyginx '*_test.py'
+
+.PHONY: docker_dist
+docker_dist: docker_build
+	docker run -v "$$(pwd):/pyginx" -it wrmsr/pyginx bash -c 'cd /pyginx && make dist'

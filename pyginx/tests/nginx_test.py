@@ -20,7 +20,7 @@ class TestNginx(unittest.TestCase):
         start = time.time()
         while True:
             try:
-                resp = urllib.request.urlopen('http://localhost:8181/nginx/lua')
+                resp = urllib.request.urlopen('http://localhost:8181/nginx')
             except Exception:
                 if (time.time() - start) >= self.TIMEOUT:
                     raise
@@ -28,6 +28,6 @@ class TestNginx(unittest.TestCase):
                 break
 
         self.assertEqual(resp.status, 200)
-        self.assertEqual(resp.read(), b'Hello,world!\n')
+        self.assertEqual(resp.read(), b'Hi')
 
         proc.kill()
