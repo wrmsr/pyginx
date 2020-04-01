@@ -1,9 +1,12 @@
-NGINX_VERSION:=1.13.7
+# https://nginx.org/download/nginx-1.17.9.tar.gz
+# https://github.com/vision5/ngx_devel_kit
+
+NGINX_VERSION:=1.17.9
 NGINX_MODULES:= \
-	ngx_devel_kit-0.3.0 \
-	form-input-nginx-module-0.12 \
-	nginx-module-vts-0.1.15 \
-	set-misc-nginx-module-0.31 \
+	ngx_devel_kit-0.3.1 \
+	Form-input-nginx-module-0.12 \
+	nginx-module-vts-0.1.18 \
+	set-misc-nginx-module-0.32 \
 
 .PHONY: all
 all:
@@ -67,7 +70,7 @@ build:
 				\
 				; \
 			\
-			make -j2 ; \
+			make -j8 ; \
 		fi ; \
 	)
 
