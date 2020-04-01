@@ -6,6 +6,8 @@ NGINX_MODULES:= \
 	ngx_devel_kit-0.3.1 \
 	Form-input-nginx-module-0.12 \
 	nginx-module-vts-0.1.18 \
+	nginx-module-sts-0.1.1 \
+	nginx-module-stream-sts-0.1.1 \
 	set-misc-nginx-module-0.32 \
 
 .PHONY: all
