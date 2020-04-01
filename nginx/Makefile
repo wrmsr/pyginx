@@ -1,4 +1,5 @@
 # TODO: three-way merge patches
+# ununtu: apt-get install ibpcre3 libpcre3-dev
 
 NGINX_VERSION:=1.17.9
 NGINX_MODULES:= \
