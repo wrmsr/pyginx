@@ -5,11 +5,12 @@ NGINX_VERSION:=1.17.9
 NGINX_MODULES:= \
 	ngx_devel_kit-0.3.1 \
 	form-input-nginx-module-0.12 \
+	headers-more-nginx-module-0.33 \
+	set-misc-nginx-module-0.32 \
 	nginx-module-vts-0.1.18 \
 	nginx-module-sts-0.1.1 \
 	nginx-module-stream-sts-0.1.1 \
 	nginx-statsd-0.0.1 \
-	set-misc-nginx-module-0.32 \
 
 .PHONY: all
 all:
