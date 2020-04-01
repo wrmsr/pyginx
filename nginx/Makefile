@@ -8,6 +8,7 @@ NGINX_MODULES:= \
 	nginx-module-vts-0.1.18 \
 	nginx-module-sts-0.1.1 \
 	nginx-module-stream-sts-0.1.1 \
+	nginx-statsd-0.0.1 \
 	set-misc-nginx-module-0.32 \
 
 .PHONY: all
@@ -17,6 +18,17 @@ all:
 clean:
 	rm -rf build
 
+.PHONY: patch-begin
+build: clean
+	if ! [ -d "build/nginx-$(NGINX_VERSION)" ] ; then \
+		tar xvzf nginx-$(NGINX_VERSION).tar.gz -C build/ ; \
+		(cd build && cp -rv nginx-$(NGINX_VERSION) nginx-$(NGINX_VERSION)-patch) ; \
+	fi
+
+.PHONY: patch-end
+build:
+	(cd build && diff -ruN nginx-$(NGINX_VERSION) nginx-$(NGINX_VERSION)-patched > ../nginx-$(NGINX_VERSION).patch)
+
 .PHONY: build
 build:
 	-mkdir build
@@ -24,6 +36,7 @@ build:
 
 	if ! [ -d "build/nginx-$(NGINX_VERSION)" ] ; then \
 		tar xvzf nginx-$(NGINX_VERSION).tar.gz -C build/ ; \
+		(cd build/nginx-$(NGINX_VERSION) && patch -p1 < ../../nginx-$(NGINX_VERSION).patch) ; \
 	fi
 
 	for MOD in $(NGINX_MODULES) ; do \
