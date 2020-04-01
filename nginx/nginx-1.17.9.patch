@@ -1,10 +1,19 @@
-diff -ruN nginx-1.17.9/src/core/ngx_resolver.c nginx-1.17.9-patched/src/core/ngx_resolver.c
+diff -ruN nginx-1.17.9/src/core/ngx_resolver.c nginx-1.17.9-patch/src/core/ngx_resolver.c
 --- nginx-1.17.9/src/core/ngx_resolver.c	2020-03-03 07:04:21.000000000 -0800
-+++ nginx-1.17.9-patched/src/core/ngx_resolver.c	2020-04-01 12:20:56.000000000 -0700
-@@ -4397,6 +4397,6 @@
++++ nginx-1.17.9-patch/src/core/ngx_resolver.c	2020-04-01 12:32:43.000000000 -0700
+@@ -56,7 +56,7 @@
+         ((u_char *) (n) - offsetof(ngx_resolver_node_t, node))
+
+
+-static ngx_int_t ngx_udp_connect(ngx_resolver_connection_t *rec);
++ngx_int_t ngx_udp_connect(ngx_resolver_connection_t *rec);
+ static ngx_int_t ngx_tcp_connect(ngx_resolver_connection_t *rec);
+
+
+@@ -4397,7 +4397,7 @@
  }
- 
- 
+
+
 -static ngx_int_t
 +ngx_int_t
  ngx_udp_connect(ngx_resolver_connection_t *rec)

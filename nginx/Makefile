@@ -1,5 +1,4 @@
-# https://nginx.org/download/nginx-1.17.9.tar.gz
-# https://github.com/vision5/ngx_devel_kit
+# TODO: three-way merge patches
 
 NGINX_VERSION:=1.17.9
 NGINX_MODULES:= \
@@ -19,15 +18,16 @@ clean:
 	rm -rf build
 
 .PHONY: patch-begin
-build: clean
-	if ! [ -d "build/nginx-$(NGINX_VERSION)" ] ; then \
-		tar xvzf nginx-$(NGINX_VERSION).tar.gz -C build/ ; \
-		(cd build && cp -rv nginx-$(NGINX_VERSION) nginx-$(NGINX_VERSION)-patch) ; \
-	fi
+patch-begin: clean
+	-mkdir build
+
+	tar xvzf nginx-$(NGINX_VERSION).tar.gz -C build/
+
+	(cd build && cp -rv nginx-$(NGINX_VERSION) nginx-$(NGINX_VERSION)-patch)
 
 .PHONY: patch-end
-build:
-	(cd build && diff -ruN nginx-$(NGINX_VERSION) nginx-$(NGINX_VERSION)-patched > ../nginx-$(NGINX_VERSION).patch)
+patch-end:
+	(cd build && diff -ruN nginx-$(NGINX_VERSION) nginx-$(NGINX_VERSION)-patch > ../nginx-$(NGINX_VERSION).patch)
 
 .PHONY: build
 build:
